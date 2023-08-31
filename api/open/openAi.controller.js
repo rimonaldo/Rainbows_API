@@ -1,13 +1,6 @@
+
 const OpenAI = require('openai')
-
-const dotenv = require('dotenv')
-dotenv.config()
-
-const API_KEY = process.env.OPENAI_API_KEY
-
-const openai = new OpenAI({
-   apiKey: API_KEY, // defaults to process.env["OPENAI_API_KEY"]
-})
+const openai = new OpenAI(process.env.OPENAI_API_KEY)
 
 async function getCompletion(req, res) {
    console.log('getCompletion')
