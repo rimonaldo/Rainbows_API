@@ -1,3 +1,3 @@
 module.exports = {
-  'dbURL': 'mongodb://127.0.0.1:27017',
+  'dbURL': 'mongodb+srv://toys:PriXKYLDau3_eFT@cluster0.9air10m.mongodb.net/?retryWrites=true&w=majority',
 }
