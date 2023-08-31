@@ -12,10 +12,24 @@ module.exports = {
    add,
 }
 
+async function add({ primary, secondary, tertiary, neutral, info, success, warning, danger }) {
+   try {
+      // peek only updatable fields!
+      const paletteToAdd = { primary, secondary, tertiary, neutral, info, success, warning, danger }
+      const collection = await dbService.getCollection('palette')
+      await collection.insertOne(paletteToAdd)
+      console.log('paletteToAdd._id:', paletteToAdd._id);
+      return paletteToAdd
+   } catch (err) {
+      logger.error('cannot insert user', err)
+      throw err
+   }
+}
+
 async function query(filterBy = {}) {
    const criteria = _buildCriteria(filterBy)
    try {
-      const collection = await dbService.getCollection('user')
+      const collection = await dbService.getCollection('palette')
       var users = await collection.find(criteria).toArray()
       users = users.map(user => {
          delete user.password
@@ -31,28 +45,30 @@ async function query(filterBy = {}) {
    }
 }
 
-async function getById(userId) {
+async function getById(paletteId) {
    try {
-      const collection = await dbService.getCollection('user')
-      const user = await collection.findOne({ _id: ObjectId(userId) })
-      delete user.password
+      console.log('paletteId:', paletteId)
+      const collection = await dbService.getCollection('palette')
+      const palette = await collection.findOne({ _id: ObjectId(paletteId) })
+      // delete user.password
 
-      user.givenReviews = await reviewService.query({ byUserId: ObjectId(user._id) })
-      user.givenReviews = user.givenReviews.map(review => {
-         delete review.byUser
-         return review
-      })
+      // user.givenReviews = await reviewService.query({ byUserId: ObjectId(user._id) })
+      // user.givenReviews = user.givenReviews.map(review => {
+      // delete review.byUser
+      // return review
+      // })
 
-      return user
+      return palette
    } catch (err) {
-      logger.error(`while finding user by id: ${userId}`, err)
+      logger.error(`while finding user by id: ${paletteId}`, err)
       throw err
    }
 }
+
 async function getByUsername(username) {
    try {
-        console.log('getting', username);
-      const collection = await dbService.getCollection('user')
+      console.log('getting', username)
+      const collection = await dbService.getCollection('palette')
       const user = await collection.findOne({ username })
       return user
    } catch (err) {
@@ -63,7 +79,7 @@ async function getByUsername(username) {
 
 async function remove(userId) {
    try {
-      const collection = await dbService.getCollection('user')
+      const collection = await dbService.getCollection('palette')
       await collection.deleteOne({ _id: ObjectId(userId) })
    } catch (err) {
       logger.error(`cannot remove user ${userId}`, err)
@@ -71,32 +87,25 @@ async function remove(userId) {
    }
 }
 
-async function update(user) {
+async function update(palette) {
    try {
       // peek only updatable properties
-      const userToSave = {
-         _id: ObjectId(user._id), // needed for the returnd obj
-         fullname: user.fullname,
-         score: user.score,
+      const paletteToSave = {
+         _id: ObjectId(palette._id), // needed for the returnd obj
+         primary: palette.primary,
+         secondary: palette.secondary,
+         tertiary: palette.tertiary,
+         neutral: palette.neutral,
+         info: palette.info,
+         success: palette.success,
+         warning: palette.warning,
+         danger: palette.danger,
       }
-      const collection = await dbService.getCollection('user')
-      await collection.updateOne({ _id: userToSave._id }, { $set: userToSave })
-      return userToSave
+      const collection = await dbService.getCollection('palette')
+      await collection.updateOne({ _id: paletteToSave._id }, { $set: paletteToSave })
+      return paletteToSave
    } catch (err) {
-      logger.error(`cannot update user ${user._id}`, err)
-      throw err
-   }
-}
-
-async function add({ username, password }) {
-   try {
-      // peek only updatable fields!
-      const userToAdd = { username, password }
-      const collection = await dbService.getCollection('user')
-      await collection.insertOne(userToAdd)
-      return userToAdd
-   } catch (err) {
-      logger.error('cannot insert user', err)
+      logger.error(`cannot update user ${palette._id}`, err)
       throw err
    }
 }

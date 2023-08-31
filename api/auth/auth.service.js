@@ -28,10 +28,8 @@ async function login(username, password) {
 
 async function signup({ username, password }) {
    const saltRounds = 10
-
    logger.debug(`auth.service - signup with username: ${username},`)
    if (!username || !password) return Promise.reject('Missing required signup information')
-
    const userExist = await userService.getByUsername(username)
    if (userExist) return Promise.reject('Username already taken')
 
