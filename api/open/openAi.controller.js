@@ -18,9 +18,7 @@ async function getCompletion(req, res) {
          messages: [
             {
                role: 'user',
-               content:
-               `Provide a UX/UI color palette for the theme: '${prompt}'. Return as: "primary: HEX, secondary: HEX, tertiary: HEX".`
-
+               content: `Provide a UX/UI color palette for the theme: '${prompt}'. Return as: "primary: HEX, secondary: HEX, tertiary: HEX".`,
             },
          ],
          model: 'gpt-3.5-turbo',
