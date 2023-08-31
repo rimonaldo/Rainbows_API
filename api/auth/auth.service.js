@@ -4,8 +4,8 @@ const userService = require('../user/user.service')
 const logger = require('../../services/logger.service')
 const cryptr = new Cryptr(process.env.SECRET1 || 'Secret-Puk-1234')
 
-const EC = require('elliptic').ec
-const ec = new EC('secp256k1')
+// const EC = require('elliptic').ec
+// const ec = new EC('secp256k1')
 
 async function login(username, password) {
    logger.debug(`auth.service - login with username: ${username}`)
